@@ -26,7 +26,9 @@ const latest = posts.slice(0, 8);
 			</div>
 		</div>
 		<div class="hero-media">
-			<img class="cat" src={`${BASE}images/jiaojiao-cutout.png?v=2`} alt="叫叫（金渐层）" loading="eager" />
+			<div class="cat-wrap">
+				<img class="cat" src={`${BASE}images/jiaojiao-cutout.png?v=3`} alt="叫叫（金渐层）" loading="eager" />
+			</div>
 		</div>
 	</section>
 
@@ -88,14 +90,24 @@ const latest = posts.slice(0, 8);
 		.btn.ghost { background: rgba(255,255,255,.14); color: #fff; }
 
 		.hero-media { display: grid; place-items: center; }
-		.cat {
+		.cat-wrap {
 			width: min(360px, 92%);
-			height: auto;
 			max-height: 520px;
-			object-fit: contain;
+			padding: 14px 14px 6px;
 			border-radius: 18px;
 			box-shadow: 0 18px 50px rgba(0,0,0,.35);
 			border: 1px solid rgba(255,255,255,.18);
+			background: rgba(255,255,255,.06);
+			display: grid;
+			place-items: center;
+		}
+		.cat {
+			width: 100%;
+			height: auto;
+			max-height: 500px;
+			object-fit: contain;
+			border-radius: 0;
+			display: block;
 		}
 
 		.section { margin-top: 1.4rem; }

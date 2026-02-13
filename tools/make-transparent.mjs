@@ -1,15 +1,14 @@
 import sharp from 'sharp';
-
 import { fileURLToPath } from 'node:url';
 
 const input = fileURLToPath(new URL('../public/images/jiaojiao-cutout.jpg', import.meta.url));
 const output = fileURLToPath(new URL('../public/images/jiaojiao-cutout.png', import.meta.url));
 
 // Key out near-white background to transparency.
-// Tune threshold 245~252 if needed.
-const THRESHOLD = 250;
+// Higher threshold removes more white; lower preserves more edge.
+const THRESHOLD = 248;
 
-const { data: mask, info } = await sharp(input)
+const { data: alpha, info } = await sharp(input)
   .greyscale()
   .threshold(THRESHOLD)
   .negate()
@@ -18,8 +17,9 @@ const { data: mask, info } = await sharp(input)
 
 await sharp(input)
   .removeAlpha()
-  .joinChannel(mask, { raw: { width: info.width, height: info.height, channels: 1 } })
-  .png({ compressionLevel: 9, palette: true })
+  .ensureAlpha() // add fully-opaque alpha first
+  .joinChannel(alpha, { raw: { width: info.width, height: info.height, channels: 1 } })
+  .png({ compressionLevel: 9 }) // IMPORTANT: do not palette-quantize, keep alpha
   .toFile(output);
 
-console.log('Wrote', output.pathname, info.width, info.height);
+console.log('Wrote', output, info.width, info.height);

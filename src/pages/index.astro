@@ -3,26 +3,52 @@ import BaseHead from '../components/BaseHead.astro';
 import Footer from '../components/Footer.astro';
 import Header from '../components/Header.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+const BASE = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
 ---
 
 <!doctype html>
 <html lang="zh-CN">
 	<head>
 		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+		<style>
+			.hero {
+				background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #334155 100%);
+				color: #fff;
+				padding: 3rem 1.4rem;
+				border-radius: 18px;
+				margin-top: 1rem;
+			}
+			.hero h1 { margin: 0 0 .6rem; font-size: clamp(1.8rem, 4vw, 2.6rem); }
+			.hero p { margin: 0; opacity: .92; }
+			.actions { margin-top: 1.2rem; display: flex; gap: .8rem; flex-wrap: wrap; }
+			.btn {
+				display: inline-block; padding: .62rem 1rem; border-radius: 10px;
+				text-decoration: none; font-weight: 600;
+			}
+			.btn.primary { background: #38bdf8; color: #04243a; }
+			.btn.ghost { background: rgba(255,255,255,.14); color: #fff; }
+			.grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 1rem; margin-top: 1.4rem; }
+			.card { background:#fff; border-radius:14px; padding:1rem; box-shadow:0 6px 20px rgba(0,0,0,.06); }
+			.card h3 { margin:0 0 .4rem; }
+		</style>
 	</head>
 	<body>
 		<Header />
 		<main>
-			<h1>你好，我是 jiaojiao 👋</h1>
-			<p>
-				这是我的个人博客。这里会持续更新：技术笔记、项目复盘、工具心得，以及一些生活随笔。
-			</p>
-			<p>
-				你可以先从 <a href="/blog">文章列表</a> 开始看；如果想了解我，去 <a href="/about">关于页面</a>。
-			</p>
-			<p>
-				这个站点基于 Astro 构建，追求简洁、快速和清晰阅读体验。
-			</p>
+			<section class="hero">
+				<h1>jiaojiao 的博客</h1>
+				<p>记录技术、想法与生活。简洁、清爽、可长期更新。</p>
+				<div class="actions">
+					<a class="btn primary" href={`${BASE}blog`}>查看文章</a>
+					<a class="btn ghost" href={`${BASE}about`}>关于我</a>
+				</div>
+			</section>
+			<section class="grid">
+				<article class="card"><h3>技术实践</h3><p>项目踩坑、工程化、自动化经验沉淀。</p></article>
+				<article class="card"><h3>效率工具</h3><p>高频实用工具组合与工作流优化。</p></article>
+				<article class="card"><h3>生活随笔</h3><p>把值得记住的片段整理成清晰文字。</p></article>
+			</section>
 		</main>
 		<Footer />
 	</body>

@@ -1,15 +1,20 @@
 ---
 import { SITE_TITLE } from '../consts';
 import HeaderLink from './HeaderLink.astro';
+
+const BASE = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+const home = `${BASE}`;
+const blog = `${BASE}blog`;
+const about = `${BASE}about`;
 ---
 
 <header>
 	<nav>
-		<h2><a href="/">{SITE_TITLE}</a></h2>
+		<h2><a href={home}>{SITE_TITLE}</a></h2>
 		<div class="internal-links">
-			<HeaderLink href="/">首页</HeaderLink>
-			<HeaderLink href="/blog">文章</HeaderLink>
-			<HeaderLink href="/about">关于</HeaderLink>
+			<HeaderLink href={home}>首页</HeaderLink>
+			<HeaderLink href={blog}>文章</HeaderLink>
+			<HeaderLink href={about}>关于</HeaderLink>
 		</div>
 	</nav>
 </header>
@@ -18,16 +23,14 @@ import HeaderLink from './HeaderLink.astro';
 		margin: 0;
 		padding: 0 1em;
 		background: white;
-		box-shadow: 0 2px 8px rgba(var(--black), 5%);
+		box-shadow: 0 2px 12px rgba(var(--black), 6%);
+		position: sticky;
+		top: 0;
+		z-index: 10;
 	}
 	h2 {
 		margin: 0;
 		font-size: 1.1em;
-	}
-
-	h2 a,
-	h2 a.active {
-		text-decoration: none;
 	}
 	nav {
 		display: flex;
@@ -35,13 +38,12 @@ import HeaderLink from './HeaderLink.astro';
 		justify-content: space-between;
 	}
 	nav a {
-		padding: 1em 0.5em;
+		padding: 1em 0.6em;
 		color: var(--black);
-		border-bottom: 4px solid transparent;
+		border-bottom: 3px solid transparent;
 		text-decoration: none;
 	}
 	nav a.active {
-		text-decoration: none;
 		border-bottom-color: var(--accent);
 	}
 </style>

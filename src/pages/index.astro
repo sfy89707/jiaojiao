@@ -2,28 +2,43 @@
 import { getCollection } from 'astro:content';
 import FormattedDate from '../components/FormattedDate.astro';
 import SiteLayout from '../layouts/SiteLayout.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+import { SITE_AUTHOR, SITE_BIO, SITE_DESCRIPTION, SITE_TITLE } from '../consts';
 
 const BASE = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+
+const featured = posts.filter((p) => p.data.featured).slice(0, 2);
 const latest = posts.slice(0, 8);
 ---
 
 <SiteLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
 	<section class="hero">
-		<div class="hero-inner">
-			<div class="kicker">个人博客</div>
-			<h1>jiaojiao</h1>
-			<p class="desc">技术 / 工具 / 随笔。做一个可长期维护的知识库。</p>
-			<div class="actions">
-				<a class="btn primary" href={`${BASE}blog`}>进入文章</a>
-				<a class="btn ghost" href={`${BASE}about`}>关于我</a>
-			</div>
+		<div class="kicker">个人博客</div>
+		<h1>{SITE_AUTHOR}</h1>
+		<p class="desc">{SITE_BIO}</p>
+		<div class="actions">
+			<a class="btn primary" href={`${BASE}blog`}>进入文章</a>
+			<a class="btn ghost" href={`${BASE}about`}>关于我</a>
 		</div>
 	</section>
+
+	{featured.length > 0 && (
+		<section class="section">
+			<div class="section-title">置顶推荐</div>
+			<div class="featured">
+				{featured.map((p) => (
+					<a class="fcard" href={`${BASE}blog/${p.id}/`}>
+						<div class="ftitle">{p.data.title}</div>
+						<div class="fmeta"><FormattedDate date={p.data.pubDate} /></div>
+						<div class="fdesc">{p.data.description}</div>
+					</a>
+				))}
+			</div>
+		</section>
+	)}
 
 	<section class="section">
 		<div class="section-title">最新文章</div>
@@ -55,12 +70,20 @@ const latest = posts.slice(0, 8);
 		.hero h1 { margin: .4rem 0 .6rem; color: #fff; }
 		.desc { margin: 0; opacity: .92; }
 		.actions { margin-top: 1.2rem; display:flex; gap: .8rem; flex-wrap: wrap; }
-		.btn { display:inline-block; padding: .62rem 1rem; border-radius: 10px; text-decoration:none; font-weight: 700; }
+		.btn { display:inline-block; padding: .62rem 1rem; border-radius: 10px; text-decoration:none; font-weight: 800; }
 		.btn.primary { background: #38bdf8; color: #06283a; }
 		.btn.ghost { background: rgba(255,255,255,.14); color: #fff; }
 
 		.section { margin-top: 1.4rem; }
 		.section-title { font-weight: 900; margin-bottom: .8rem; }
+
+		.featured { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+		.fcard { background:#fff; border-radius:14px; box-shadow: var(--box-shadow); padding: 1rem; text-decoration:none; }
+		.fcard:hover { transform: translateY(-1px); transition: .15s ease; }
+		.ftitle { font-weight: 900; color: rgb(var(--black)); }
+		.fmeta { margin-top: .35rem; color: rgb(var(--gray)); font-size: .92rem; }
+		.fdesc { margin-top: .55rem; color: rgba(var(--gray-dark), .88); }
+
 		.posts { display: grid; gap: .8rem; }
 		.post {
 			background: #fff;

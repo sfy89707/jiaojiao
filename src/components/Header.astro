@@ -5,46 +5,106 @@ import HeaderLink from './HeaderLink.astro';
 const BASE = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
 const home = `${BASE}`;
 const blog = `${BASE}blog`;
+const archive = `${BASE}archive`;
 const about = `${BASE}about`;
 ---
 
-<header>
-	<nav>
-		<h2><a href={home}>{SITE_TITLE}</a></h2>
+<header class="header">
+	<nav class="nav">
+		<h2 class="brand"><a href={home}>{SITE_TITLE}</a></h2>
 		<div class="internal-links">
 			<HeaderLink href={home}>首页</HeaderLink>
 			<HeaderLink href={blog}>文章</HeaderLink>
-			<HeaderLink href={`${BASE}archive`}>归档</HeaderLink>
+			<HeaderLink href={archive}>归档</HeaderLink>
 			<HeaderLink href={about}>关于</HeaderLink>
+		</div>
+		<div class="right">
+			<button id="theme-toggle" class="toggle" type="button" aria-label="切换主题">🌓</button>
 		</div>
 	</nav>
 </header>
+
 <style>
-	header {
-		margin: 0;
-		padding: 0 1em;
-		background: white;
-		box-shadow: 0 2px 12px rgba(var(--black), 6%);
+	.header {
 		position: sticky;
 		top: 0;
 		z-index: 10;
+		padding: .35rem 0;
+		background: rgba(6, 10, 19, 0.55);
+		backdrop-filter: blur(14px);
+		border-bottom: 1px solid var(--border);
 	}
-	h2 {
-		margin: 0;
-		font-size: 1.1em;
-	}
-	nav {
-		display: flex;
+	.nav {
+		width: min(1120px, calc(100% - 2rem));
+		margin: 0 auto;
+		display: grid;
+		grid-template-columns: 1fr auto auto;
 		align-items: center;
-		justify-content: space-between;
+		gap: 1rem;
 	}
-	nav a {
-		padding: 1em 0.6em;
-		color: var(--black);
-		border-bottom: 3px solid transparent;
+	.brand { margin: 0; font-size: 1.05rem; letter-spacing: .02em; }
+	.brand a { text-decoration: none; color: var(--text); }
+	.internal-links {
+		display: flex;
+		gap: .25rem;
+		align-items: center;
+		justify-content: center;
+		padding: .25rem;
+		background: rgba(255,255,255,.06);
+		border: 1px solid var(--border);
+		border-radius: 999px;
+	}
+	:global(.internal-links a) {
+		padding: .55rem .7rem;
+		border-radius: 999px;
+		color: var(--text);
+		text-decoration: none;
+		border-bottom: none;
+		opacity: .9;
+	}
+	:global(.internal-links a.active) {
+		background: rgba(56,189,248,.16);
+		box-shadow: var(--ring);
+		opacity: 1;
 		text-decoration: none;
 	}
-	nav a.active {
-		border-bottom-color: var(--accent);
+	.right { display:flex; justify-content: flex-end; }
+	.toggle {
+		border: 1px solid var(--border);
+		background: rgba(255,255,255,.06);
+		color: var(--text);
+		border-radius: 12px;
+		padding: .55rem .7rem;
+		cursor: pointer;
+	}
+	.toggle:hover { background: rgba(255,255,255,.10); }
+
+	@media (max-width: 860px) {
+		.nav { grid-template-columns: 1fr auto; grid-auto-rows: auto; }
+		.internal-links { grid-column: 1 / -1; justify-content: center; }
 	}
 </style>
+
+<script>
+	const root = document.documentElement;
+	const key = 'jiaojiao-theme';
+
+	function setTheme(t) {
+		root.setAttribute('data-theme', t);
+		try { localStorage.setItem(key, t); } catch {}
+	}
+
+	const saved = (() => { try { return localStorage.getItem(key); } catch { return null; } })();
+	if (saved === 'light' || saved === 'dark') {
+		setTheme(saved);
+	} else {
+		// default to dark, but respect OS preference
+		const prefersLight = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches;
+		setTheme(prefersLight ? 'light' : 'dark');
+	}
+
+	document.getElementById('theme-toggle')?.addEventListener('click', () => {
+		const curr = root.getAttribute('data-theme') || 'dark';
+		setTheme(curr === 'dark' ? 'light' : 'dark');
+	});
+</script>

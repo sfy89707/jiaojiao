@@ -1,10 +1,8 @@
 ---
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
-import BaseHead from '../../components/BaseHead.astro';
-import Footer from '../../components/Footer.astro';
 import FormattedDate from '../../components/FormattedDate.astro';
-import Header from '../../components/Header.astro';
+import SiteLayout from '../../layouts/SiteLayout.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
 
 const posts = (await getCollection('blog')).sort(
@@ -13,36 +11,71 @@ const posts = (await getCollection('blog')).sort(
 const BASE = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
 ---
 
-<!doctype html>
-<html lang="zh-CN">
-	<head>
-		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
-		<style>
-			main { width: min(1100px, 92vw); }
-			ul { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.2rem; list-style: none; padding: 0; }
-			li { background: #fff; border-radius: 14px; overflow: hidden; box-shadow: 0 6px 20px rgba(0,0,0,.06); }
-			li a { display: block; padding: .6rem .8rem 1rem; text-decoration: none; }
-			img { border-radius: 10px; }
-			.title { margin: .5rem 0 .3rem; color: rgb(var(--black)); }
-			.date { margin: 0; color: rgb(var(--gray)); font-size: .92rem; }
-		</style>
-	</head>
-	<body>
-		<Header />
-		<main>
-			<h1>文章</h1>
-			<ul>
-				{posts.map((post) => (
-					<li>
-						<a href={`${BASE}blog/${post.id}/`}>
-							{post.data.heroImage && <Image width={720} height={360} src={post.data.heroImage} alt="" />}
-							<h4 class="title">{post.data.title}</h4>
-							<p class="date"><FormattedDate date={post.data.pubDate} /></p>
-						</a>
-					</li>
-				))}
-			</ul>
-		</main>
-		<Footer />
-	</body>
-</html>
+<SiteLayout title={`${SITE_TITLE} · 文章`} description={SITE_DESCRIPTION}>
+	<h1>文章</h1>
+	<div class="tools">
+		<div class="tip">支持搜索 / 标签过滤（右侧栏）</div>
+	</div>
+	<ul id="post-list">
+		{posts.map((post) => (
+			<li
+				class="item"
+				data-title={post.data.title}
+				data-desc={post.data.description}
+				data-tags={(post.data.tags ?? []).join(',')}
+			>
+				<a href={`${BASE}blog/${post.id}/`}>
+					{post.data.heroImage && <Image width={720} height={360} src={post.data.heroImage} alt="" />}
+					<div class="title">{post.data.title}</div>
+					<div class="meta">
+						<FormattedDate date={post.data.pubDate} />
+						{(post.data.tags ?? []).slice(0, 3).map((t) => (
+							<span class="tag">{t}</span>
+						))}
+					</div>
+					<div class="excerpt">{post.data.description}</div>
+				</a>
+			</li>
+		))}
+	</ul>
+
+	<style>
+		.tools { display:flex; justify-content: space-between; align-items:center; margin: .5rem 0 1rem; }
+		.tip { color: rgb(var(--gray)); font-size: .95rem; }
+		ul { list-style: none; padding: 0; margin: 0; display:grid; gap: 1rem; }
+		.item { background:#fff; border-radius: 14px; overflow:hidden; box-shadow: var(--box-shadow); }
+		.item a { display:block; padding: .8rem 1rem 1.1rem; text-decoration:none; }
+		.title { font-weight: 900; color: rgb(var(--black)); margin-top: .6rem; }
+		.meta { margin-top: .35rem; color: rgb(var(--gray)); font-size: .92rem; display:flex; gap:.45rem; flex-wrap:wrap; align-items:center; }
+		.tag { padding: .12rem .5rem; border-radius: 999px; background: rgba(14,165,233,.10); color: var(--accent-dark); }
+		.excerpt { margin-top: .55rem; color: rgba(var(--gray-dark), .88); }
+	</style>
+
+	<script>
+		const list = document.getElementById('post-list');
+		const params = new URLSearchParams(location.search);
+		const initialTag = params.get('tag') || '';
+
+		function applyFilter(q = '', tag = '') {
+			const query = (q || '').trim().toLowerCase();
+			const t = (tag || '').trim();
+			const items = list?.querySelectorAll?.('.item') || [];
+			for (const el of items) {
+				const title = (el.dataset.title || '').toLowerCase();
+				const desc = (el.dataset.desc || '').toLowerCase();
+				const tags = (el.dataset.tags || '');
+				const okQuery = !query || title.includes(query) || desc.includes(query);
+				const okTag = !t || tags.split(',').includes(t);
+				el.style.display = okQuery && okTag ? '' : 'none';
+			}
+		}
+
+		window.addEventListener('post-search', (e) => {
+			applyFilter(e.detail, initialTag);
+		});
+
+		// restore sidebar search
+		const saved = sessionStorage.getItem('postSearch') || '';
+		applyFilter(saved, initialTag);
+	</script>
+</SiteLayout>

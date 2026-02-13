@@ -1,0 +1,21 @@
+---
+import AboutHeroImage from '../assets/blog-placeholder-about.jpg';
+import Layout from '../layouts/BlogPost.astro';
+---
+
+<Layout
+	title="关于我"
+	description="关于 jiaojiao 的简单介绍"
+	pubDate={new Date()}
+	heroImage={AboutHeroImage}
+>
+	<p>
+		你好，我是 jiaojiao。这个博客主要记录我在技术和创作上的积累，也会分享一些值得长期保存的思考。
+	</p>
+	<p>
+		我喜欢把复杂的事情拆解成可执行的步骤，偏爱实用、简洁、有复用价值的内容。
+	</p>
+	<p>
+		如果你也对效率工具、自动化和产品构建感兴趣，欢迎常来看看。
+	</p>
+</Layout>

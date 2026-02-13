@@ -1,0 +1,29 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Footer from '../components/Footer.astro';
+import Header from '../components/Header.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+---
+
+<!doctype html>
+<html lang="zh-CN">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<h1>你好，我是 jiaojiao 👋</h1>
+			<p>
+				这是我的个人博客。这里会持续更新：技术笔记、项目复盘、工具心得，以及一些生活随笔。
+			</p>
+			<p>
+				你可以先从 <a href="/blog">文章列表</a> 开始看；如果想了解我，去 <a href="/about">关于页面</a>。
+			</p>
+			<p>
+				这个站点基于 Astro 构建，追求简洁、快速和清晰阅读体验。
+			</p>
+		</main>
+		<Footer />
+	</body>
+</html>

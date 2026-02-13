@@ -48,6 +48,11 @@ const tags = Array.from(tagSet).sort((a, b) => a.localeCompare(b, 'zh-CN'));
 	</section>
 
 	<section class="card">
+		<div class="card-title">归档</div>
+		<a class="archive" href={`${BASE}archive`}>按月份查看 →</a>
+	</section>
+
+	<section class="card">
 		<div class="card-title">最近更新</div>
 		<ul class="recent">
 			{recent.map((p) => (
@@ -90,6 +95,8 @@ const tags = Array.from(tagSet).sort((a, b) => a.localeCompare(b, 'zh-CN'));
 		text-decoration:none;
 		font-size: .9rem;
 	}
+	.archive { text-decoration:none; color: rgb(var(--black)); font-weight: 800; }
+	.archive:hover { color: var(--accent-dark); }
 	.recent { list-style: none; margin: 0; padding: 0; display:grid; gap: .45rem; }
 	.recent a { text-decoration: none; }
 	.muted { color: rgb(var(--gray)); }

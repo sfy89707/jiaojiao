@@ -17,7 +17,7 @@ const tags = Array.from(tagSet).sort((a, b) => a.localeCompare(b, 'zh-CN'));
 
 <aside class="sidebar">
 	<section class="card profile">
-		<div class="avatar">叫</div>
+		<img class="avatar" src={`${BASE}images/jiaojiao.jpg`} alt="叫叫（金渐层）" loading="lazy" />
 		<div>
 			<div class="name">叫叫</div>
 			<div class="bio">欢迎来到叫叫站，我是一直可爱的金渐层小猫咪</div>
@@ -75,9 +75,11 @@ const tags = Array.from(tagSet).sort((a, b) => a.localeCompare(b, 'zh-CN'));
 	}
 	.profile { display: flex; gap: .9rem; align-items: center; }
 	.avatar {
-		width: 44px; height: 44px; border-radius: 50%;
-		background: linear-gradient(135deg, #0ea5e9, #22c55e);
-		display: grid; place-items: center; color: #06283a; font-weight: 800;
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		object-fit: cover;
+		border: 1px solid rgba(0,0,0,.08);
 	}
 	.name { font-weight: 800; color: rgb(var(--black)); }
 	.bio { color: rgb(var(--gray)); font-size: .92rem; margin-top: .2rem; }

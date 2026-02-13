@@ -16,12 +16,17 @@ const latest = posts.slice(0, 8);
 
 <SiteLayout title={SITE_TITLE} description={SITE_DESCRIPTION}>
 	<section class="hero">
-		<div class="kicker">个人博客</div>
-		<h1>{SITE_AUTHOR}</h1>
-		<p class="desc">{SITE_BIO}</p>
-		<div class="actions">
-			<a class="btn primary" href={`${BASE}blog`}>进入文章</a>
-			<a class="btn ghost" href={`${BASE}about`}>关于我</a>
+		<div class="hero-text">
+			<div class="kicker">金渐层 · 个人博客</div>
+			<h1>{SITE_AUTHOR}</h1>
+			<p class="desc">{SITE_BIO}（喜欢睡觉和流口水）</p>
+			<div class="actions">
+				<a class="btn primary" href={`${BASE}blog`}>进入文章</a>
+				<a class="btn ghost" href={`${BASE}about`}>关于我</a>
+			</div>
+		</div>
+		<div class="hero-media">
+			<img class="cat" src={`${BASE}images/jiaojiao.jpg`} alt="叫叫（金渐层）" loading="eager" />
 		</div>
 	</section>
 
@@ -63,8 +68,16 @@ const latest = posts.slice(0, 8);
 			background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0b1220 100%);
 			border-radius: 18px;
 			color: #fff;
-			padding: 2.4rem 1.6rem;
+			padding: 1.8rem 1.6rem;
 			box-shadow: var(--box-shadow);
+			display: grid;
+			grid-template-columns: 1.2fr .8fr;
+			gap: 1.2rem;
+			align-items: center;
+		}
+		@media (max-width: 900px) {
+			.hero { grid-template-columns: 1fr; }
+			.hero-media { order: -1; }
 		}
 		.kicker { opacity: .75; font-size: .95rem; letter-spacing: .08em; text-transform: uppercase; }
 		.hero h1 { margin: .4rem 0 .6rem; color: #fff; }
@@ -73,6 +86,16 @@ const latest = posts.slice(0, 8);
 		.btn { display:inline-block; padding: .62rem 1rem; border-radius: 10px; text-decoration:none; font-weight: 800; }
 		.btn.primary { background: #38bdf8; color: #06283a; }
 		.btn.ghost { background: rgba(255,255,255,.14); color: #fff; }
+
+		.hero-media { display: grid; place-items: center; }
+		.cat {
+			width: min(320px, 92%);
+			aspect-ratio: 1 / 1;
+			object-fit: cover;
+			border-radius: 18px;
+			box-shadow: 0 18px 50px rgba(0,0,0,.35);
+			border: 1px solid rgba(255,255,255,.18);
+		}
 
 		.section { margin-top: 1.4rem; }
 		.section-title { font-weight: 900; margin-bottom: .8rem; }
